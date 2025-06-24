@@ -1,0 +1,31 @@
+﻿namespace Catalog.API.Exceptions;
+
+public class GlobalExceptionHandler
+{
+    private readonly RequestDelegate _next;
+
+    public GlobalExceptionHandler(RequestDelegate next)
+    {
+        _next = next;
+    }
+
+    public async Task Invoke(HttpContext context)
+    {
+        try
+        {
+            await _next(context);
+        }
+        catch (Exception ex)
+        {
+            context.Response.StatusCode = 500;
+            context.Response.ContentType = "application/json";
+
+            var errorResponse = new
+            {
+                Message = "An unexpected error occurred.",
+                Details = ex.Message
+            };
+            await context.Response.WriteAsJsonAsync(errorResponse);
+        }
+    }
+}
