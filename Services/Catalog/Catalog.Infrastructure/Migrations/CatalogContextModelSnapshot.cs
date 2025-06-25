@@ -34,8 +34,15 @@ namespace Catalog.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateOnly>("PublicationDate")
                         .HasColumnType("date");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -50,14 +57,18 @@ namespace Catalog.Infrastructure.Migrations
                         {
                             Id = 1,
                             Author = "Stephen Covey",
+                            Price = 120m,
                             PublicationDate = new DateOnly(1989, 8, 15),
+                            Quantity = 10,
                             Title = "7 Habits Of Highly Effective People"
                         },
                         new
                         {
                             Id = 2,
                             Author = "George Samuel Clason",
+                            Price = 100m,
                             PublicationDate = new DateOnly(1926, 1, 1),
+                            Quantity = 10,
                             Title = "Richest Man In Babylon"
                         });
                 });

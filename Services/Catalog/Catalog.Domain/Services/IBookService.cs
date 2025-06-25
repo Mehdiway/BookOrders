@@ -3,6 +3,7 @@
 namespace Catalog.Domain.Services;
 public interface IBookService
 {
+    Task<bool> CheckBookIdsAllExistAsync(List<int> bookIds);
     Task CreateBookAsync(BookDto bookDto);
     Task DeleteBookAsync(int id);
     Task<BookDto> GetBookByIdAsync(int id);

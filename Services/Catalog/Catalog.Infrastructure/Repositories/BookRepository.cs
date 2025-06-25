@@ -51,4 +51,10 @@ public class BookRepository : IBookRepository
 
         await _context.SaveChangesAsync();
     }
+
+    public async Task<bool> CheckBookIdsAllExistAsync(List<int> bookIds)
+    {
+        var count = await _context.Books.Where(b => bookIds.Contains(b.Id)).CountAsync();
+        return count == bookIds.Count;
+    }
 }

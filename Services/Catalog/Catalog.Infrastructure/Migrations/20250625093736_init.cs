@@ -21,7 +21,9 @@ namespace Catalog.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PublicationDate = table.Column<DateOnly>(type: "date", nullable: false)
+                    PublicationDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,11 +32,11 @@ namespace Catalog.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Books",
-                columns: new[] { "Id", "Author", "PublicationDate", "Title" },
+                columns: new[] { "Id", "Author", "Price", "PublicationDate", "Quantity", "Title" },
                 values: new object[,]
                 {
-                    { 1, "Stephen Covey", new DateOnly(1989, 8, 15), "7 Habits Of Highly Effective People" },
-                    { 2, "George Samuel Clason", new DateOnly(1926, 1, 1), "Richest Man In Babylon" }
+                    { 1, "Stephen Covey", 120m, new DateOnly(1989, 8, 15), 10, "7 Habits Of Highly Effective People" },
+                    { 2, "George Samuel Clason", 100m, new DateOnly(1926, 1, 1), 10, "Richest Man In Babylon" }
                 });
         }
 

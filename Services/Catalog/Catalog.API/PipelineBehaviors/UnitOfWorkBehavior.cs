@@ -23,7 +23,7 @@ public class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
         await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
         try
         {
-            var response = await next(cancellationToken); // Handler -> Service -> Repository x Exception
+            var response = await next(cancellationToken);
             await transaction.CommitAsync(cancellationToken);
             return response;
         }

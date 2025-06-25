@@ -48,4 +48,11 @@ public class BooksController : ControllerBase
         await _mediator.Send(new DeleteBookCommand(id), cancellationToken);
         return Ok();
     }
+
+    [HttpPost("BookIdsAllExist")]
+    public async Task<IActionResult> BookIdsAllExist([FromBody] List<int> bookIds, CancellationToken cancellationToken)
+    {
+        var result = await _mediator.Send(new CheckBookIdsAllExistQuery(bookIds), cancellationToken);
+        return Ok(result);
+    }
 }

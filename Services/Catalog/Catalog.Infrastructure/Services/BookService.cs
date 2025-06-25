@@ -46,4 +46,10 @@ public class BookService : IBookService
     {
         await _bookRepository.DeleteBookAsync(id);
     }
+
+    public async Task<bool> CheckBookIdsAllExistAsync(List<int> bookIds)
+    {
+        var result = await _bookRepository.CheckBookIdsAllExistAsync(bookIds);
+        return result;
+    }
 }

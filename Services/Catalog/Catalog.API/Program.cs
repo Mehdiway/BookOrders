@@ -9,6 +9,7 @@ using FluentValidation;
 using MediatR;
 using Catalog.API.PipelineBehaviors;
 using Catalog.API.Exceptions;
+using Shared.PipelineBehaviors;
 
 var builder = WebApplication.CreateBuilder(args);
 

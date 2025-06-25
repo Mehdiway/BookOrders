@@ -3,6 +3,7 @@
 namespace Catalog.Domain.Repositories;
 public interface IBookRepository
 {
+    Task<bool> CheckBookIdsAllExistAsync(List<int> booksIds);
     Task CreateBookAsync(Book book);
     Task DeleteBookAsync(int id);
     Task<Book?> GetBookByIdAsync(int id);

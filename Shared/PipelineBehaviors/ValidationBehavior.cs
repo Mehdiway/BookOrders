@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 
-namespace Catalog.API.PipelineBehaviors;
+namespace Shared.PipelineBehaviors;
 
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
