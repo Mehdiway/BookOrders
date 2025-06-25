@@ -1,18 +1,19 @@
-﻿using FluentValidation;
+﻿using Catalog.API.Configuration;
+using Catalog.API.PipelineBehaviors;
+using Catalog.Infrastructure;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Order.API.PipelineBehaviors;
-using Order.Infrastructure;
 using Shared.PipelineBehaviors;
 using System.Reflection;
 
-namespace Order.API.Configuration;
+namespace Catalog.API.Configuration;
 
-public static class RegisterServices
+public static class ServiceRegistration
 {
     public static IServiceCollection AddEFCore(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<OrderContext>(options =>
+        services.AddDbContext<CatalogContext>(options =>
         {
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
         });
@@ -31,8 +32,13 @@ public static class RegisterServices
     public static IServiceCollection AddFluentValidation(this IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+        return services;
+    }
+
+    public static IServiceCollection AddPipelineBehaviors(this IServiceCollection services)
+    {
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehavior<,>));
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CatalogUnitOfWorkBehavior<,>));
         return services;
     }
 
@@ -44,12 +50,10 @@ public static class RegisterServices
         return services;
     }
 
-    public static IServiceCollection AddHttpClients(this IServiceCollection services)
+    public static void MigrateDb(this WebApplication app)
     {
-        services.AddHttpClient("catalog", client =>
-        {
-            client.BaseAddress = new Uri("https://localhost:7000");
-        });
-        return services;
+        using var scope = app.Services.CreateScope();
+        var db = scope.ServiceProvider.GetRequiredService<CatalogContext>();
+        db.Database.Migrate();
     }
 }

@@ -1,48 +1,26 @@
-using Catalog.Domain.Repositories;
-using Catalog.Domain.Services;
-using Catalog.Infrastructure;
-using Catalog.Infrastructure.Repositories;
-using Catalog.Infrastructure.Services;
-using Microsoft.EntityFrameworkCore;
-using System.Reflection;
-using FluentValidation;
-using MediatR;
-using Catalog.API.PipelineBehaviors;
+using Catalog.API.Configuration;
 using Catalog.API.Exceptions;
-using Shared.PipelineBehaviors;
+using Catalog.Infrastructure.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
-
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnitOfWorkBehavior<,>));
+var configuration = builder.Configuration;
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-// MediatR
-builder.Services.AddMediatR(cfg =>
-{
-    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
-});
-builder.Services.AddDbContext<CatalogContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-builder.Services.AddScoped<IBookService, BookService>();
-builder.Services.AddScoped<IBookRepository, BookRepository>();
-builder.Services.AddAutoMapper(typeof(CatalogInfrastructureMarker).Assembly);
+// Application services
+builder.Services
+    .AddEFCore(configuration)
+    .AddMediatR()
+    .AddFluentValidation()
+    .AddPipelineBehaviors()
+    .AddSwagger()
+    .AddInfrastructureServices();
+
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<CatalogContext>();
-    db.Database.Migrate();
-}
+app.MigrateDb();
 
 app.UseMiddleware<GlobalExceptionHandler>();
 

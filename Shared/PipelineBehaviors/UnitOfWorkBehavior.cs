@@ -1,17 +1,12 @@
 ﻿using MediatR;
-using Order.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using Shared.CQRS;
 
-namespace Order.API.PipelineBehaviors;
-
-public class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
+namespace Shared.PipelineBehaviors;
+public abstract class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : notnull
 {
-    private readonly OrderContext _context;
-
-    public UnitOfWorkBehavior(OrderContext context)
-    {
-        _context = context;
-    }
+    protected abstract DbContext GetDbContext();
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
@@ -20,7 +15,8 @@ public class UnitOfWorkBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
             return await next(cancellationToken);
         }
 
-        await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+        var context = GetDbContext();
+        await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
         try
         {
             var response = await next(cancellationToken);

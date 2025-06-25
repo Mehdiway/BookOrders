@@ -6,7 +6,7 @@ using Order.Infrastructure.Repositories;
 using Order.Infrastructure.Services;
 
 namespace Order.Infrastructure.Configuration;
-public static class RegisterServices
+public static class ServiceRegistration
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
     {

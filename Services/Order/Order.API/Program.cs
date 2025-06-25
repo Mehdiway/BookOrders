@@ -1,10 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using Order.API.Configuration;
-using Order.Infrastructure;
+using Order.API.Exceptions;
 using Order.Infrastructure.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
-
 var configuration = builder.Configuration;
 
 builder.Services.AddControllers();
@@ -15,17 +13,16 @@ builder.Services
     .AddEFCore(configuration)
     .AddMediatR()
     .AddFluentValidation()
+    .AddPipelineBehaviors()
     .AddSwagger()
     .AddInfrastructureServices()
     .AddHttpClients();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<OrderContext>();
-    db.Database.Migrate();
-}
+app.MigrateDb();
+
+app.UseMiddleware<GlobalExceptionHandler>();
 
 if (app.Environment.IsDevelopment())
 {
