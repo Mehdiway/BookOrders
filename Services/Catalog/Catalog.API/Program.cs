@@ -38,6 +38,12 @@ builder.Services.AddAutoMapper(typeof(CatalogInfrastructureMarker).Assembly);
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<CatalogContext>();
+    db.Database.Migrate();
+}
+
 app.UseMiddleware<GlobalExceptionHandler>();
 
 if (app.Environment.IsDevelopment())

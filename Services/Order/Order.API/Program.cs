@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using Order.API.Configuration;
+using Order.Infrastructure;
 using Order.Infrastructure.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +20,12 @@ builder.Services
     .AddHttpClients();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<OrderContext>();
+    db.Database.Migrate();
+}
 
 if (app.Environment.IsDevelopment())
 {
