@@ -1,4 +1,6 @@
-﻿namespace Catalog.API.Exceptions;
+﻿using Shared.Exceptions;
+
+namespace Catalog.API.Exceptions;
 
 public class GlobalExceptionHandler
 {
@@ -17,12 +19,12 @@ public class GlobalExceptionHandler
         }
         catch (Exception ex)
         {
-            context.Response.StatusCode = 500;
+            context.Response.StatusCode = ex is DomainException ? 400 : 500;
             context.Response.ContentType = "application/json";
 
             var errorResponse = new
             {
-                Message = "An unexpected error occurred.",
+                Message = ex is DomainException ? ex.Message : "An unexpected error occurred.",
                 Details = ex.Message
             };
             await context.Response.WriteAsJsonAsync(errorResponse);

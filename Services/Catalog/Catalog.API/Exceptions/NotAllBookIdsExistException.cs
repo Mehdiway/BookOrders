@@ -1,5 +1,7 @@
-﻿namespace Catalog.API.Exceptions;
+﻿using Shared.Exceptions;
 
-public class NotAllBookIdsExistException : Exception
+namespace Catalog.API.Exceptions;
+
+public class NotAllBookIdsExistException : DomainException
 {
 }
