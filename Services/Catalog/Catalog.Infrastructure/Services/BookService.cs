@@ -4,17 +4,21 @@ using Catalog.Domain.Entities;
 using Catalog.Domain.Repositories;
 using Catalog.Domain.Services;
 using Shared.DTO;
+using Shared.Messaging;
+using Shared.Messaging.Events;
 
 namespace Catalog.Infrastructure.Services;
 public class BookService : IBookService
 {
     private readonly IBookRepository _bookRepository;
     private readonly IMapper _mapper;
+    private readonly IEventPublisher _publisher;
 
-    public BookService(IBookRepository bookRepository, IMapper mapper)
+    public BookService(IBookRepository bookRepository, IMapper mapper, IEventPublisher publisher)
     {
         _bookRepository = bookRepository;
         _mapper = mapper;
+        _publisher = publisher;
     }
 
     public async Task CreateBookAsync(BookDto bookDto)
@@ -58,8 +62,14 @@ public class BookService : IBookService
         return await _bookRepository.IsQuantityAvailableForBookIdAsync(bookId, quantity);
     }
 
-    public async Task DecreaseBookQuantitiesAsync(Dictionary<int, int> bookQuantities)
+    public async Task DecreaseBookQuantitiesAsync(Dictionary<int, int> bookQuantities, int orderId)
     {
         await _bookRepository.DecreaseBookQuantitiesAsync(bookQuantities);
+
+        BookQuantitiesDecreasedEvent @event = new()
+        {
+            OrderId = orderId
+        };
+        await _publisher.PublishAsync(@event);
     }
 }

@@ -22,21 +22,30 @@ public class CheckoutBookCommandHandler : IRequestHandler<CheckoutBookCommand>
 
     public async Task Handle(CheckoutBookCommand request, CancellationToken cancellationToken)
     {
+        await ValidateCheckout(request);
+
+        await _orderService.CheckoutBookAsync(request);
+
+        await DecreaseBookQuantitiesWithGrpcAsync(request);
+    }
+
+    private async Task ValidateCheckout(CheckoutBookCommand request)
+    {
         // Validate the bookIds
         var bookIds = request.OrderItems.Select(oi => oi.BookId).ToList();
 
         var response = await _httpClient.PostAsJsonAsync("/api/Books/BookIdsAllExist", bookIds);
-        response.EnsureSuccessStatusCode();
+        var allExist = await response.Content.ReadFromJsonAsync<bool>();
+        if (!allExist)
+        {
+            throw new NotAllBookIdsExistException();
+        }
 
         // Validate quantities for each book Id (using gRPC)
         foreach (var orderItem in request.OrderItems)
         {
             await ValidateBookQuantityUsingGrpcAsync(orderItem.BookId, orderItem.Quantity);
         }
-
-        await _orderService.CheckoutBookAsync(request);
-
-        await DecreaseBookQuantitiesAsync(request);
     }
 
     private async Task ValidateBookQuantityUsingGrpcAsync(int bookId, int quantity)
@@ -50,7 +59,7 @@ public class CheckoutBookCommandHandler : IRequestHandler<CheckoutBookCommand>
         }
     }
 
-    private async Task DecreaseBookQuantitiesAsync(CheckoutBookCommand command)
+    private async Task DecreaseBookQuantitiesWithGrpcAsync(CheckoutBookCommand command)
     {
         var request = new DecreaseBookQuantityRequest();
 

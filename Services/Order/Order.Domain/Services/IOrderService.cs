@@ -5,4 +5,5 @@ namespace Order.Domain.Services;
 public interface IOrderService : IGenericService<OrderDto>
 {
     Task CheckoutBookAsync(OrderDto order);
+    Task ConfirmOrderAsync(int orderId);
 }

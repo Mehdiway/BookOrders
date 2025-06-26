@@ -25,8 +25,8 @@ public class CatalogGrpcService : CatalogService.CatalogServiceBase
 
     public override async Task<Empty> DecreaseBookQuantity(DecreaseBookQuantityRequest request, ServerCallContext context)
     {
-        var bookQuantities = request.BookQuantities.ToDictionary();
-        await _bookService.DecreaseBookQuantitiesAsync(bookQuantities);
+        //var bookQuantities = request.BookQuantities.ToDictionary();
+        //await _bookService.DecreaseBookQuantitiesAsync(bookQuantities);
 
         return new Empty();
     }

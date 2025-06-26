@@ -1,6 +1,6 @@
 ﻿using Shared.Exceptions;
 
-namespace Catalog.Domain.Exceptions;
+namespace Order.Domain.Exceptions;
 
 public class NotAllBookIdsExistException : DomainException
 {

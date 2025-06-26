@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Shared.Enums;
 
 namespace Order.API.CQRS.Commands;
 
@@ -9,5 +10,9 @@ public class CheckoutBookCommandValidator : AbstractValidator<CheckoutBookComman
         RuleFor(x => x.OrderItems)
             .NotEmpty()
             .WithMessage("An Order has to have at least one Order Item");
+
+        RuleFor(x => x.OrderStatus)
+            .Equal(OrderStatus.Waiting)
+            .WithMessage("New checkout must have the status Waiting (1)");
     }
 }

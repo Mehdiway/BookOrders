@@ -1,7 +1,9 @@
 using Catalog.API.Configuration;
 using Catalog.API.Exceptions;
 using Catalog.Infrastructure.Configuration;
+using Catalog.Infrastructure.EventHandlers;
 using Catalog.Infrastructure.Services;
+using Shared.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -17,6 +19,11 @@ builder.Services
     .AddPipelineBehaviors()
     .AddSwagger()
     .AddInfrastructureServices();
+
+builder.Services.AddMassTransitWithRabbitMQ(configuration, cfg =>
+{
+    cfg.AddConsumer<OrderPlacedEventConsumer>();
+});
 
 builder.Services.AddGrpc();
 

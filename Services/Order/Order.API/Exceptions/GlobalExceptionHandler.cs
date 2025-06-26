@@ -1,4 +1,7 @@
-﻿namespace Order.API.Exceptions;
+﻿using FluentValidation;
+using Shared.Exceptions;
+
+namespace Order.API.Exceptions;
 
 public class GlobalExceptionHandler
 {
@@ -17,15 +20,13 @@ public class GlobalExceptionHandler
         }
         catch (Exception ex)
         {
-            context.Response.StatusCode = 500;
+            var isDomainException = ex is DomainException || ex is ValidationException;
+
+            context.Response.StatusCode = isDomainException ? 400 : 500;
             context.Response.ContentType = "application/json";
 
-            var errorResponse = new
-            {
-                Message = "An unexpected error occurred.",
-                Details = ex.Message
-            };
-            await context.Response.WriteAsJsonAsync(errorResponse);
+            var errorMessage = isDomainException ? ex.Message : "An unexpected error occurred.";
+            await context.Response.WriteAsJsonAsync(errorMessage);
         }
     }
 }

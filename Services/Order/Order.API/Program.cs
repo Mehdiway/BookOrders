@@ -2,6 +2,8 @@ using Grpc.Net.Client;
 using Order.API.Configuration;
 using Order.API.Exceptions;
 using Order.Infrastructure.Configuration;
+using Order.Infrastructure.EventHandlers;
+using Shared.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -18,6 +20,11 @@ builder.Services
     .AddSwagger()
     .AddInfrastructureServices()
     .AddHttpClients();
+
+builder.Services.AddMassTransitWithRabbitMQ(configuration, cfg =>
+{
+    cfg.AddConsumer<BookQuantitiesDecreasedEventConsumer>();
+});
 
 var catalogServiceUrl = configuration.GetConnectionString("CatalogService");
 builder.Services.AddSingleton(provider =>

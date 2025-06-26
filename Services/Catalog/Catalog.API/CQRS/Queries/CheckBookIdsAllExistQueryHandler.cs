@@ -1,5 +1,4 @@
-﻿using Catalog.Domain.Exceptions;
-using Catalog.Domain.Services;
+﻿using Catalog.Domain.Services;
 using MediatR;
 
 namespace Catalog.API.CQRS.Queries;
@@ -16,12 +15,6 @@ public class CheckBookIdsAllExistQueryHandler : IRequestHandler<CheckBookIdsAllE
     public async Task<bool> Handle(CheckBookIdsAllExistQuery request, CancellationToken cancellationToken)
     {
         var allExist = await _bookService.CheckBookIdsAllExistAsync(request.BookIds);
-
-        if (!allExist)
-        {
-            throw new NotAllBookIdsExistException();
-        }
-
         return allExist;
     }
 }
