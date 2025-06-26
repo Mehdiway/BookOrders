@@ -1,11 +1,14 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 option csharp_namespace = "Shared.Grpc";
 
 package catalog;
 
 service CatalogService {
   rpc CheckBookQuantity (CheckBookQuantityRequest) returns (CheckBookQuantityResponse);
+  rpc DecreaseBookQuantity (DecreaseBookQuantityRequest) returns (google.protobuf.Empty);
 }
 
 message CheckBookQuantityRequest {
@@ -15,4 +18,8 @@ message CheckBookQuantityRequest {
 
 message CheckBookQuantityResponse {
   bool is_available = 1;
+}
+
+message DecreaseBookQuantityRequest {
+	map<int32,int32> book_quantities = 1;
 }

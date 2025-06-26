@@ -5,6 +5,7 @@ public interface IBookRepository
 {
     Task<bool> CheckBookIdsAllExistAsync(List<int> booksIds);
     Task CreateBookAsync(Book book);
+    Task DecreaseBookQuantitiesAsync(Dictionary<int, int> bookQuantities);
     Task DeleteBookAsync(int id);
     Task<Book?> GetBookByIdAsync(int id);
     Task<List<Book>> GetBooksAsync(CancellationToken cancellationToken);

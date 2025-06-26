@@ -1,4 +1,5 @@
 ﻿using Catalog.Domain.Services;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Shared.Grpc;
 
@@ -20,5 +21,13 @@ public class CatalogGrpcService : CatalogService.CatalogServiceBase
         {
             IsAvailable = isAvailable
         };
+    }
+
+    public override async Task<Empty> DecreaseBookQuantity(DecreaseBookQuantityRequest request, ServerCallContext context)
+    {
+        var bookQuantities = request.BookQuantities.ToDictionary();
+        await _bookService.DecreaseBookQuantitiesAsync(bookQuantities);
+
+        return new Empty();
     }
 }

@@ -57,4 +57,9 @@ public class BookService : IBookService
     {
         return await _bookRepository.IsQuantityAvailableForBookIdAsync(bookId, quantity);
     }
+
+    public async Task DecreaseBookQuantitiesAsync(Dictionary<int, int> bookQuantities)
+    {
+        await _bookRepository.DecreaseBookQuantitiesAsync(bookQuantities);
+    }
 }

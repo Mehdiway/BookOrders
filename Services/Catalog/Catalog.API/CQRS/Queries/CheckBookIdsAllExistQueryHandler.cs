@@ -1,4 +1,4 @@
-﻿using Catalog.API.Exceptions;
+﻿using Catalog.Domain.Exceptions;
 using Catalog.Domain.Services;
 using MediatR;
 

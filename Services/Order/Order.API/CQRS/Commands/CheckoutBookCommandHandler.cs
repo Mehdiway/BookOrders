@@ -1,6 +1,6 @@
 ﻿using Grpc.Net.Client;
 using MediatR;
-using Order.API.Exceptions;
+using Order.Domain.Exceptions;
 using Order.Domain.Services;
 using Shared.Grpc;
 
@@ -35,6 +35,8 @@ public class CheckoutBookCommandHandler : IRequestHandler<CheckoutBookCommand>
         }
 
         await _orderService.CheckoutBookAsync(request);
+
+        await DecreaseBookQuantitiesAsync(request);
     }
 
     private async Task ValidateBookQuantityUsingGrpcAsync(int bookId, int quantity)
@@ -46,5 +48,16 @@ public class CheckoutBookCommandHandler : IRequestHandler<CheckoutBookCommand>
         {
             throw new InsufficientBookQuantityException();
         }
+    }
+
+    private async Task DecreaseBookQuantitiesAsync(CheckoutBookCommand command)
+    {
+        var request = new DecreaseBookQuantityRequest();
+
+        foreach (var orderItem in command.OrderItems)
+        {
+            request.BookQuantities.Add(orderItem.BookId, orderItem.Quantity);
+        }
+        var response = await _client.DecreaseBookQuantityAsync(request);
     }
 }

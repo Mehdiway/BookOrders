@@ -1,6 +1,7 @@
 ﻿using Ardalis.GuardClauses;
 using AutoMapper;
 using Catalog.Domain.Entities;
+using Catalog.Domain.Exceptions;
 using Catalog.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -63,5 +64,20 @@ public class BookRepository : IBookRepository
         var book = await _context.Books.FirstOrDefaultAsync(book => book.Id == bookId);
         Guard.Against.Null(book);
         return book.Quantity >= quantity;
+    }
+
+    public async Task DecreaseBookQuantitiesAsync(Dictionary<int, int> bookQuantities)
+    {
+        foreach (var bookQuantity in bookQuantities)
+        {
+            var book = await _context.Books.FindAsync(bookQuantity.Key);
+            Guard.Against.Null(book);
+            if (book.Quantity < bookQuantity.Value)
+            {
+                throw new InsufficientBookQuantityToDecreaseException();
+            }
+            book.Quantity -= bookQuantity.Value;
+        }
+        await _context.SaveChangesAsync();
     }
 }
