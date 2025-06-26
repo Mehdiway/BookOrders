@@ -1,6 +1,8 @@
 using Catalog.API.Configuration;
 using Catalog.API.Exceptions;
 using Catalog.Infrastructure.Configuration;
+using Catalog.Infrastructure.EventsConsumers;
+using Shared.Messaging.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -17,6 +19,10 @@ builder.Services
     .AddSwagger()
     .AddInfrastructureServices();
 
+builder.Services.AddMassTransitWithRabbitMq(configuration, cfg =>
+{
+    cfg.AddConsumer<OrderPlacedConsumer>();
+});
 
 var app = builder.Build();
 

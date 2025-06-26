@@ -1,6 +1,7 @@
 using Order.API.Configuration;
 using Order.API.Exceptions;
 using Order.Infrastructure.Configuration;
+using Shared.Messaging.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -17,6 +18,8 @@ builder.Services
     .AddSwagger()
     .AddInfrastructureServices()
     .AddHttpClients();
+
+builder.Services.AddMassTransitWithRabbitMq(configuration);
 
 var app = builder.Build();
 
