@@ -15,20 +15,20 @@ This repository is a hands-on microservices course project demonstrating Clean A
 
 ## Services 🛠️
 
-- **Catalog Service** (`catalog-api`) 📗
+- **Catalog Service** (`catalog-api`)
   - Manages books (CRUD, quantity checks)
   - Exposes REST and gRPC endpoints
   - Publishes and consumes events via RabbitMQ/MassTransit
-- **Order Service** (`order-api`) 📦
+- **Order Service** (`order-api`)
   - Manages orders and checkout
   - Communicates with Catalog via gRPC
   - Publishes and consumes events via RabbitMQ/MassTransit
-- **API Gateway** (`api-gateway`) 🌐
+- **API Gateway** (`api-gateway`)
   - Single entry point for clients
   - Routes `/catalog/*` and `/order/*` to respective services
-- **SQL Server** (`sqlserver`) 🗄️
+- **SQL Server** (`sqlserver`)
   - Shared database instance for persistence
-- **RabbitMQ** (`rabbitmq`) 🐇
+- **RabbitMQ** (`rabbitmq`)
   - Message broker for asynchronous communication
 
 ## Solution Structure 🗂️
@@ -52,11 +52,12 @@ BookManagement/
 
 ## Running the Solution 🚀
 
-### Prerequisites ⚙️
+### ⚙️ Prerequisites
+
 - [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0) 💻
 - [Docker](https://www.docker.com/get-started) 🐳
 
-### Start All Services 🏁
+### 🏁 Start All Services
 
 ```bash
 docker-compose up --build
@@ -74,7 +75,8 @@ You can run each service individually using Visual Studio or `dotnet run` in the
 
 ## API Summary 📑
 
-### Catalog API 📗
+### Catalog API
+
 - `GET /catalog/api/books` - List all books
 - `GET /catalog/api/books/{id}` - Get book by ID
 - `POST /catalog/api/books` - Create a new book
@@ -85,7 +87,8 @@ You can run each service individually using Visual Studio or `dotnet run` in the
 - **gRPC**: `CatalogService` (see `Shared/Protos/catalog.proto`)
 - **Events**: Publishes and consumes book-related events via RabbitMQ/MassTransit
 
-### Order API 📦
+### Order API
+
 - `GET /order/api/orders` - List all orders
 - `GET /order/api/orders/{id}` - Get order by ID
 - `POST /order/api/orders/CheckoutBook` - Checkout books (create order)
@@ -108,4 +111,4 @@ You can run each service individually using Visual Studio or `dotnet run` in the
 
 ## License 📄
 
-This project is for educational purposes as part of a microservices course. 
+This project is for educational purposes as part of a microservices course.
