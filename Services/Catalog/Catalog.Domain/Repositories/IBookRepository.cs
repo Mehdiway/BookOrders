@@ -8,5 +8,6 @@ public interface IBookRepository
     Task DeleteBookAsync(int id);
     Task<Book?> GetBookByIdAsync(int id);
     Task<List<Book>> GetBooksAsync(CancellationToken cancellationToken);
+    Task<bool> IsQuantityAvailableForBookIdAsync(int bookId, int quantity);
     Task UpdateBookAsync(Book book);
 }

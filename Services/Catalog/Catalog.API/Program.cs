@@ -1,6 +1,7 @@
 using Catalog.API.Configuration;
 using Catalog.API.Exceptions;
 using Catalog.Infrastructure.Configuration;
+using Catalog.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -17,10 +18,13 @@ builder.Services
     .AddSwagger()
     .AddInfrastructureServices();
 
+builder.Services.AddGrpc();
 
 var app = builder.Build();
 
 app.MigrateDb();
+
+app.MapGrpcService<CatalogGrpcService>();
 
 app.UseMiddleware<GlobalExceptionHandler>();
 

@@ -8,5 +8,6 @@ public interface IBookService
     Task DeleteBookAsync(int id);
     Task<BookDto> GetBookByIdAsync(int id);
     public Task<List<BookDto>> GetBooksAsync(CancellationToken cancellationToken);
+    Task<bool> IsQuantityAvailableForBookIdAsync(int bookId, int quantity);
     Task UpdateBookAsync(BookDto bookDto);
 }

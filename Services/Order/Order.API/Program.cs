@@ -1,3 +1,4 @@
+using Grpc.Net.Client;
 using Order.API.Configuration;
 using Order.API.Exceptions;
 using Order.Infrastructure.Configuration;
@@ -17,6 +18,12 @@ builder.Services
     .AddSwagger()
     .AddInfrastructureServices()
     .AddHttpClients();
+
+var catalogServiceUrl = configuration.GetConnectionString("CatalogService");
+builder.Services.AddSingleton(provider =>
+{
+    return GrpcChannel.ForAddress(catalogServiceUrl!);
+});
 
 var app = builder.Build();
 

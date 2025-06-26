@@ -57,4 +57,11 @@ public class BookRepository : IBookRepository
         var count = await _context.Books.Where(b => bookIds.Contains(b.Id)).CountAsync();
         return count == bookIds.Count;
     }
+
+    public async Task<bool> IsQuantityAvailableForBookIdAsync(int bookId, int quantity)
+    {
+        var book = await _context.Books.FirstOrDefaultAsync(book => book.Id == bookId);
+        Guard.Against.Null(book);
+        return book.Quantity >= quantity;
+    }
 }

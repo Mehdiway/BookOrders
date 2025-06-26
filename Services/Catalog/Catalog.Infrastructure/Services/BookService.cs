@@ -52,4 +52,9 @@ public class BookService : IBookService
         var result = await _bookRepository.CheckBookIdsAllExistAsync(bookIds);
         return result;
     }
+
+    public async Task<bool> IsQuantityAvailableForBookIdAsync(int bookId, int quantity)
+    {
+        return await _bookRepository.IsQuantityAvailableForBookIdAsync(bookId, quantity);
+    }
 }
