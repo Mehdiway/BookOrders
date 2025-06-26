@@ -24,6 +24,7 @@ builder.Services
 builder.Services.AddMassTransitWithRabbitMQ(configuration, cfg =>
 {
     cfg.AddConsumer<BookQuantitiesDecreasedEventConsumer>();
+    cfg.AddConsumer<BookQuantitiesCannotBeDecreasedEventConsumer>();
 });
 
 var catalogServiceUrl = configuration.GetConnectionString("CatalogService");

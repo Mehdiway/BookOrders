@@ -39,4 +39,9 @@ public class OrderService : GenericService<Domain.Entities.Order, OrderDto>, IOr
     {
         await _orderRepository.ConfirmOrderAsync(orderId);
     }
+
+    public async Task CancelOrderAsync(int orderId)
+    {
+        await _orderRepository.CancelOrderAsync(orderId);
+    }
 }

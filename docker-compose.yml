@@ -11,6 +11,7 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=CatalogDb;User=sa;Password=BookManagement123;TrustServerCertificate=True;
+      - RabbitMQ=amqp://guest:guest@rabbitmq:5672/
     networks:
       - app-network
 
@@ -24,6 +25,7 @@ services:
     environment:
       - ASPNETCORE_URLS=http://+:80
       - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=OrderDb;User=sa;Password=BookManagement123;TrustServerCertificate=True;
+      - RabbitMQ=amqp://guest:guest@rabbitmq:5672/
     networks:
       - app-network
 
@@ -51,6 +53,23 @@ services:
     networks:
       - app-network
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - app-network
+
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  rabbitmq_data:

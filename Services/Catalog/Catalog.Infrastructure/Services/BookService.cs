@@ -64,12 +64,23 @@ public class BookService : IBookService
 
     public async Task DecreaseBookQuantitiesAsync(Dictionary<int, int> bookQuantities, int orderId)
     {
-        await _bookRepository.DecreaseBookQuantitiesAsync(bookQuantities);
-
-        BookQuantitiesDecreasedEvent @event = new()
+        try
         {
-            OrderId = orderId
-        };
-        await _publisher.PublishAsync(@event);
+            await _bookRepository.DecreaseBookQuantitiesAsync(bookQuantities);
+
+            BookQuantitiesDecreasedEvent @event = new()
+            {
+                OrderId = orderId
+            };
+            await _publisher.PublishAsync(@event);
+        }
+        catch (Exception ex)
+        {
+            BookQuantitiesCannotBeDecreasedEvent @event = new()
+            {
+                OrderId = orderId
+            };
+            await _publisher.PublishAsync(@event);
+        }
     }
 }

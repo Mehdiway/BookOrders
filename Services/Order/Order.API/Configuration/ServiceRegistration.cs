@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Order.API.PipelineBehaviors;
 using Order.Infrastructure;
+using Polly;
+using Polly.Extensions.Http;
 using Shared.PipelineBehaviors;
 using System.Reflection;
 
@@ -54,7 +56,9 @@ public static class ServiceRegistration
         services.AddHttpClient("catalog", client =>
         {
             client.BaseAddress = new Uri("https://localhost:7000");
-        });
+        })
+            .AddPolicyHandler(GetRetryPolicy())
+            .AddPolicyHandler(GetCircuitBreakerPolicy());
         return services;
     }
 
@@ -63,5 +67,19 @@ public static class ServiceRegistration
         using var scope = app.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<OrderContext>();
         db.Database.Migrate();
+    }
+
+    private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+    {
+        return HttpPolicyExtensions
+            .HandleTransientHttpError()
+            .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+    }
+
+    private static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
+    {
+        return HttpPolicyExtensions
+            .HandleTransientHttpError()
+            .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30));
     }
 }

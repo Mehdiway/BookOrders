@@ -31,4 +31,14 @@ public class OrderRepository : GenericRepository<Domain.Entities.Order>, IOrderR
 
         await _context.SaveChangesAsync();
     }
+
+    public async Task CancelOrderAsync(int orderId)
+    {
+        var order = await _context.Orders.FindAsync(orderId);
+        Guard.Against.Null(order);
+
+        order.OrderStatus = Shared.Enums.OrderStatus.Cancelled;
+
+        await _context.SaveChangesAsync();
+    }
 }
