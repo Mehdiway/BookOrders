@@ -3,9 +3,9 @@
 namespace Shared.Repositories;
 public interface IGenericRepository<T> where T : Entity
 {
-    Task<List<T>> GetAllAsync(string? includeProperty = "");
-    Task<T?> GetByIdAsync(int id, string? includeProperty = "");
-    Task<T> AddAsync(T entity);
-    Task<T> UpdateAsync(T entity);
-    Task DeleteAsync(int id);
+    Task<List<T>> GetAllAsync(string? includeProperty = "", CancellationToken cancellationToken = default);
+    Task<T?> GetByIdAsync(int id, string? includeProperty = "", CancellationToken cancellationToken = default);
+    Task<T> AddAsync(T entity, CancellationToken cancellationToken = default);
+    Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default);
+    Task DeleteAsync(int id, CancellationToken cancellationToken = default);
 }

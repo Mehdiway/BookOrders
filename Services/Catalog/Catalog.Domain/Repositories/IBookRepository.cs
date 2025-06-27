@@ -1,14 +1,10 @@
 ﻿using Catalog.Domain.Entities;
+using Shared.Repositories;
 
 namespace Catalog.Domain.Repositories;
-public interface IBookRepository
+public interface IBookRepository : IGenericRepository<Book>
 {
     Task<bool> CheckBookIdsAllExistAsync(List<int> booksIds);
-    Task CreateBookAsync(Book book);
     Task DecreaseBookQuantitiesAsync(Dictionary<int, int> bookQuantities);
-    Task DeleteBookAsync(int id);
-    Task<Book?> GetBookByIdAsync(int id);
-    Task<List<Book>> GetBooksAsync(CancellationToken cancellationToken);
     Task<bool> IsQuantityAvailableForBookIdAsync(int bookId, int quantity);
-    Task UpdateBookAsync(Book book);
 }

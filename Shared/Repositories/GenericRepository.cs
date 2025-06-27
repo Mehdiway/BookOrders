@@ -14,17 +14,17 @@ public class GenericRepository<T> : IGenericRepository<T> where T : Entity
         _table = _context.Set<T>();
     }
 
-    public virtual async Task<List<T>> GetAllAsync(string? includeProperty = "")
+    public virtual async Task<List<T>> GetAllAsync(string? includeProperty = "", CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(includeProperty))
         {
             return await _table.ToListAsync();
         }
 
-        return await _table.Include(includeProperty).ToListAsync();
+        return await _table.Include(includeProperty).ToListAsync(cancellationToken);
     }
 
-    public virtual async Task<T?> GetByIdAsync(int id, string? includeProperty = "")
+    public virtual async Task<T?> GetByIdAsync(int id, string? includeProperty = "", CancellationToken cancellationToken = default)
     {
         T? entity = null;
 
@@ -34,32 +34,32 @@ public class GenericRepository<T> : IGenericRepository<T> where T : Entity
         }
         else
         {
-            entity = await _table.Include(includeProperty).Where(x => x.Id == id).FirstOrDefaultAsync();
+            entity = await _table.Include(includeProperty).Where(x => x.Id == id).FirstOrDefaultAsync(cancellationToken);
         }
 
         Guard.Against.Null(entity);
         return entity;
     }
 
-    public async Task<T> AddAsync(T entity)
+    public async Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
     {
         _table.Add(entity);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
         var entity = await _table.FindAsync(id);
         Guard.Against.Null(entity);
         _table.Remove(entity);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<T> UpdateAsync(T entity)
+    public async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default)
     {
         _table.Update(entity);
-        await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 }

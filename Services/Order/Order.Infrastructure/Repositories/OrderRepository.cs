@@ -12,12 +12,12 @@ public class OrderRepository : GenericRepository<Domain.Entities.Order>, IOrderR
         _context = context;
     }
 
-    public override async Task<List<Domain.Entities.Order>> GetAllAsync(string? includeProperty = "")
+    public override async Task<List<Domain.Entities.Order>> GetAllAsync(string? includeProperty = "", CancellationToken cancellationToken = default)
     {
         return await base.GetAllAsync(nameof(Domain.Entities.Order.OrderItems));
     }
 
-    public override async Task<Domain.Entities.Order?> GetByIdAsync(int id, string? includeProperty = "")
+    public override async Task<Domain.Entities.Order?> GetByIdAsync(int id, string? includeProperty = "", CancellationToken cancellationToken = default)
     {
         return await base.GetByIdAsync(id, nameof(Domain.Entities.Order.OrderItems));
     }

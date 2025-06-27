@@ -1,11 +1,11 @@
 ﻿using Catalog.API.Configuration;
 using Catalog.API.PipelineBehaviors;
+using Catalog.Application;
 using Catalog.Infrastructure;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Shared.PipelineBehaviors;
-using System.Reflection;
 
 namespace Catalog.API.Configuration;
 
@@ -24,14 +24,14 @@ public static class ServiceRegistration
     {
         services.AddMediatR(cfg =>
         {
-            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            cfg.RegisterServicesFromAssembly(typeof(CatalogApplicationMarker).Assembly);
         });
         return services;
     }
 
     public static IServiceCollection AddFluentValidation(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+        services.AddValidatorsFromAssembly(typeof(CatalogApplicationMarker).Assembly);
         return services;
     }
 

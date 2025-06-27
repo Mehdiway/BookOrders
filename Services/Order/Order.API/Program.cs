@@ -3,6 +3,7 @@ using Order.API.Configuration;
 using Order.API.Exceptions;
 using Order.Infrastructure.Configuration;
 using Order.Infrastructure.EventHandlers;
+using Scalar.AspNetCore;
 using Shared.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,8 +43,11 @@ app.UseMiddleware<GlobalExceptionHandler>();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    // Swagger
     app.UseSwagger();
     app.UseSwaggerUI();
+    // Scalar
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();

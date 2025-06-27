@@ -2,11 +2,11 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Order.API.PipelineBehaviors;
+using Order.Application;
 using Order.Infrastructure;
 using Polly;
 using Polly.Extensions.Http;
 using Shared.PipelineBehaviors;
-using System.Reflection;
 
 namespace Order.API.Configuration;
 
@@ -25,14 +25,14 @@ public static class ServiceRegistration
     {
         services.AddMediatR(cfg =>
         {
-            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            cfg.RegisterServicesFromAssembly(typeof(OrderApplicationMarker).Assembly);
         });
         return services;
     }
 
     public static IServiceCollection AddFluentValidation(this IServiceCollection services)
     {
-        services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+        services.AddValidatorsFromAssembly(typeof(OrderApplicationMarker).Assembly);
         return services;
     }
 

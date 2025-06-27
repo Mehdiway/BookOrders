@@ -14,6 +14,6 @@ public class UpdateBookCommandHandler : IRequestHandler<UpdateBookCommand>
 
     public async Task Handle(UpdateBookCommand request, CancellationToken cancellationToken)
     {
-        await _bookService.UpdateBookAsync(request);
+        await _bookService.UpdateAsync(request);
     }
 }

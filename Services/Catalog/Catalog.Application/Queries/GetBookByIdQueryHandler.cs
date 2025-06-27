@@ -1,4 +1,5 @@
-﻿using Catalog.Domain.Services;
+﻿using Ardalis.GuardClauses;
+using Catalog.Domain.Services;
 using MediatR;
 using Shared.DTO;
 
@@ -14,6 +15,8 @@ public class GetBookByIdQueryHandler : IRequestHandler<GetBookByIdQuery, BookDto
     }
     public async Task<BookDto> Handle(GetBookByIdQuery request, CancellationToken cancellationToken)
     {
-        return await _bookService.GetBookByIdAsync(request.Id);
+        var book = await _bookService.GetByIdAsync(request.Id);
+        Guard.Against.Null(book);
+        return book;
     }
 }

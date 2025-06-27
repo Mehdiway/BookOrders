@@ -14,6 +14,6 @@ public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand>
 
     public async Task Handle(CreateBookCommand request, CancellationToken cancellationToken)
     {
-        await _bookService.CreateBookAsync(request);
+        await _bookService.AddAsync(request);
     }
 }

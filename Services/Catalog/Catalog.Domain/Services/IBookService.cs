@@ -1,14 +1,10 @@
 ﻿using Shared.DTO;
+using Shared.Services;
 
 namespace Catalog.Domain.Services;
-public interface IBookService
+public interface IBookService : IGenericService<BookDto>
 {
     Task<bool> CheckBookIdsAllExistAsync(List<int> bookIds);
-    Task CreateBookAsync(BookDto bookDto);
     Task DecreaseBookQuantitiesAsync(Dictionary<int, int> bookQuantities, int orderId);
-    Task DeleteBookAsync(int id);
-    Task<BookDto> GetBookByIdAsync(int id);
-    public Task<List<BookDto>> GetBooksAsync(CancellationToken cancellationToken);
     Task<bool> IsQuantityAvailableForBookIdAsync(int bookId, int quantity);
-    Task UpdateBookAsync(BookDto bookDto);
 }

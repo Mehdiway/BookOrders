@@ -25,7 +25,12 @@ public class GlobalExceptionHandler
             context.Response.StatusCode = isDomainException ? 400 : 500;
             context.Response.ContentType = "application/json";
 
-            var errorMessage = isDomainException ? ex.Message : "An unexpected error occurred.";
+            string errorMessage = ex switch
+            {
+                DomainException => ex.Message,
+                ValidationException => string.Join(". ", (ex as ValidationException)!.Errors.Select(err => err.ErrorMessage)),
+                _ => "An unexpected error occurred."
+            };
             await context.Response.WriteAsJsonAsync(errorMessage);
         }
     }

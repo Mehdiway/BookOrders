@@ -3,6 +3,7 @@ using Catalog.API.Exceptions;
 using Catalog.Infrastructure.Configuration;
 using Catalog.Infrastructure.EventHandlers;
 using Catalog.Infrastructure.Services;
+using Scalar.AspNetCore;
 using Shared.Messaging;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,8 +39,11 @@ app.UseMiddleware<GlobalExceptionHandler>();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    // Swagger
     app.UseSwagger();
     app.UseSwaggerUI();
+    // Scalar
+    app.MapScalarApiReference();
 }
 
 app.UseHttpsRedirection();

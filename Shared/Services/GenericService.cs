@@ -16,33 +16,33 @@ public class GenericService<T, TDto> : IGenericService<TDto>
         _mapper = mapper;
     }
 
-    public virtual async Task<List<TDto>> GetAllAsync()
+    public virtual async Task<List<TDto>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        var list = await _repository.GetAllAsync();
+        var list = await _repository.GetAllAsync(cancellationToken: cancellationToken);
         return _mapper.Map<List<TDto>>(list);
     }
 
-    public virtual async Task<TDto?> GetByIdAsync(int id)
+    public virtual async Task<TDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var entity = await _repository.GetByIdAsync(id);
+        var entity = await _repository.GetByIdAsync(id, cancellationToken: cancellationToken);
         return _mapper.Map<TDto?>(entity);
     }
 
-    public virtual async Task<TDto> AddAsync(TDto dto)
+    public virtual async Task<TDto> AddAsync(TDto dto, CancellationToken cancellationToken = default)
     {
         var entity = _mapper.Map<T>(dto);
-        var newEntity = await _repository.AddAsync(entity);
+        var newEntity = await _repository.AddAsync(entity, cancellationToken);
         return _mapper.Map<TDto>(newEntity);
     }
 
-    public virtual async Task<TDto> UpdateAsync(TDto dto)
+    public virtual async Task<TDto> UpdateAsync(TDto dto, CancellationToken cancellationToken = default)
     {
-        var newEntity = await _repository.UpdateAsync(_mapper.Map<T>(dto));
+        var newEntity = await _repository.UpdateAsync(_mapper.Map<T>(dto), cancellationToken);
         return _mapper.Map<TDto>(newEntity);
     }
 
-    public virtual async Task DeleteAsync(int id)
+    public virtual async Task DeleteAsync(int id, CancellationToken cancellationToken = default)
     {
-        await _repository.DeleteAsync(id);
+        await _repository.DeleteAsync(id, cancellationToken);
     }
 }
