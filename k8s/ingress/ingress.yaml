@@ -1,0 +1,45 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bookmanagement-ingress
+  namespace: bookmanagement
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: bookmanagement.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: api-gateway
+            port:
+              number: 80
+      - path: /api/catalog
+        pathType: Prefix
+        backend:
+          service:
+            name: catalog-api
+            port:
+              number: 80
+      - path: /api/orders
+        pathType: Prefix
+        backend:
+          service:
+            name: order-api
+            port:
+              number: 80
+      - path: /rabbitmq
+        pathType: Prefix
+        backend:
+          service:
+            name: rabbitmq
+            port:
+              number: 15672 

@@ -1,0 +1,16 @@
+apiVersion: v2
+name: bookmanagement
+description: A Helm chart for BookManagement microservices application
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - bookmanagement
+  - microservices
+  - dotnet
+home: https://github.com/your-org/bookmanagement
+sources:
+  - https://github.com/your-org/bookmanagement
+maintainers:
+  - name: Your Name
+    email: your.email@example.com 

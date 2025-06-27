@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqlserver
+  namespace: bookmanagement
+  labels:
+    app: sqlserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sqlserver
+  template:
+    metadata:
+      labels:
+        app: sqlserver
+    spec:
+      containers:
+      - name: sqlserver
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        ports:
+        - containerPort: 1433
+        env:
+        - name: SA_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: database-secrets
+              key: sa-password
+        - name: ACCEPT_EULA
+          value: "Y"
+        volumeMounts:
+        - name: sqlserver-storage
+          mountPath: /var/opt/mssql
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+      volumes:
+      - name: sqlserver-storage
+        persistentVolumeClaim:
+          claimName: sqlserver-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sqlserver
+  namespace: bookmanagement
+  labels:
+    app: sqlserver
+spec:
+  selector:
+    app: sqlserver
+  ports:
+  - port: 1433
+    targetPort: 1433
+    protocol: TCP
+  type: ClusterIP 

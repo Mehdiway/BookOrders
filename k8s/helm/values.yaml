@@ -1,0 +1,124 @@
+# Default values for bookmanagement
+# This is a YAML-formatted file.
+
+# Global configuration
+global:
+  imageRegistry: "bookmanagement"
+  imageTag: "latest"
+  imagePullPolicy: IfNotPresent
+
+# Namespace configuration
+namespace:
+  create: true
+  name: "bookmanagement"
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: "nginx"
+  host: "bookmanagement.local"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization"
+
+# SQL Server configuration
+sqlserver:
+  enabled: true
+  image:
+    repository: mcr.microsoft.com/mssql/server
+    tag: "2022-latest"
+  resources:
+    requests:
+      memory: "2Gi"
+      cpu: "1000m"
+    limits:
+      memory: "4Gi"
+      cpu: "2000m"
+  storage:
+    size: "10Gi"
+    storageClass: "default"
+
+# RabbitMQ configuration
+rabbitmq:
+  enabled: true
+  image:
+    repository: rabbitmq
+    tag: "3-management"
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+  storage:
+    size: "5Gi"
+    storageClass: "default"
+
+# Catalog API configuration
+catalogApi:
+  enabled: true
+  image:
+    repository: bookmanagement/catalog-api
+    tag: "latest"
+  replicas: 2
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+  healthCheck:
+    enabled: true
+    path: "/health"
+
+# Order API configuration
+orderApi:
+  enabled: true
+  image:
+    repository: bookmanagement/order-api
+    tag: "latest"
+  replicas: 2
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+  healthCheck:
+    enabled: true
+    path: "/health"
+
+# API Gateway configuration
+apiGateway:
+  enabled: true
+  image:
+    repository: bookmanagement/api-gateway
+    tag: "latest"
+  replicas: 2
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+  healthCheck:
+    enabled: true
+    path: "/health"
+
+# Secrets configuration
+secrets:
+  sqlServerPassword: "BookManagement123"
+  rabbitmqUser: "guest"
+  rabbitmqPassword: "guest"
+
+# ConfigMaps configuration
+configMaps:
+  aspNetCoreEnvironment: "Production"
+  aspNetCoreUrls: "http://+:80" 
