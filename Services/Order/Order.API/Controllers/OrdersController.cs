@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Order.API.CQRS.Commands;
-using Order.API.CQRS.Queries;
+using Order.Application.Commands;
+using Order.Application.Queries;
+using Shared.Exceptions;
 
 namespace Order.API.Controllers;
 
@@ -40,7 +41,8 @@ public class OrdersController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateOrder([FromRoute] int id, [FromBody] UpdateOrderCommand updateOrderCommand, CancellationToken cancellationToken)
     {
-        updateOrderCommand.Id = id;
+        if (id != updateOrderCommand.Id) throw new IdsNotMatchingException();
+
         await _mediator.Send(updateOrderCommand, cancellationToken);
         return Ok();
     }

@@ -1,7 +1,8 @@
-﻿using Catalog.API.CQRS.Commands;
-using Catalog.API.CQRS.Queries;
+﻿using Catalog.Application.Commands;
+using Catalog.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Exceptions;
 
 namespace Catalog.API.Controllers;
 
@@ -36,8 +37,10 @@ public class BooksController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateBook([FromBody] UpdateBookCommand updateBookCommand, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateBook([FromRoute] int id, [FromBody] UpdateBookCommand updateBookCommand, CancellationToken cancellationToken)
     {
+        if (id != updateBookCommand.Id) throw new IdsNotMatchingException();
+
         await _mediator.Send(updateBookCommand, cancellationToken);
         return Ok();
     }
